@@ -209,4 +209,3 @@ E a imagem abaixo é a resultante da nossa atividade:
  ### 8.Referências
     
   https://glm.g-truc.net/0.9.9/index.html
-
