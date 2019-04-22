@@ -97,13 +97,13 @@ void MyGlDraw(void)
     // 3) Espaço da Câmera → Espaço Projetivo ou de Recorte
     
     //Distancia entre a camera e o view plane
-    double d = -0.45f;
+    double d = 2.0f;
 
     //Definiação ds matriz de Projeção
     mat4 M_Projecao = mat4( vec4(1, 0, 0, 0),
                             vec4(0, 1, 0, 0),
-                            vec4(0, 0, 1, -1/d),
-                            vec4(0, 0, d, 0));
+                            vec4(0, 0, 1, d),
+                            vec4(0, 0, -1/d, 0));
 
 
     mat4 M_MVP = M_Model * M_View * M_Projecao;
