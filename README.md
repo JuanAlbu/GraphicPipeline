@@ -24,6 +24,8 @@ Em resumo, as etapas normalmente encontradas ao longo de um pipeline gráfico s�
   <li>Rasterização</b></li>
   
 </ol>
+
+
 ![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/pipeline.png) 
 
 <br>
@@ -68,7 +70,7 @@ Após o carregamento do objeto em um vetor denominado v_objeto, começamos a tra
 
 ```
 
-### 2. Transformação: Espaço do Universo → Espaço da Câmera
+### 3. Transformação: Espaço do Universo → Espaço da Câmera
 
 ![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/universo_camera.png)
 
@@ -100,9 +102,9 @@ Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é 
 
 
 
-### 3. Transformação: Espaço da Câmera → Espaço Projetivo ou de Recorte
+### 4. Transformação: Espaço da Câmera → Espaço Projetivo ou de Recorte
 
-
+A terceira etapa do pipeline gráfico tem como objetico levar os objetos para o espaço de recorte. Isso é feito através de uma multiplicão dos vertices do objeto pela matriz projeção.
 
 ```c
     //Distancia entre a câmera e o view plane.
@@ -119,12 +121,17 @@ Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é 
     
     // Multiplicação de transformação direta do espaço do objeto para o espaço de recorte
    
+```
+
+
+```c
+
     for(int i = 0; i < v_objeto.size(); i++) {
         v_objeto[i] = v_objeto[i] * M_MVP;
     }
 ```
 
-### 4. Transformação: Espaço de Recorte → Espaço “Canônico”
+### 5. Transformação: Espaço de Recorte → Espaço “Canônico”
 
 ```c
     //Dividindo as coordenadas dos vértices no espaço de recorte pela sua coordenada homogênea.
@@ -135,7 +142,7 @@ Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é 
 ```
 
 
-### 5. Transformação: Espaço Canônico → Espaço de Tela
+### 6. Transformação: Espaço Canônico → Espaço de Tela
 ```c
     int w = 512;
     int h = 512;
@@ -159,15 +166,13 @@ Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é 
                    vec4((w-1)/2, (h-1)/2, 0, 1));
     
     mat4 M_ViewPort = S2 * T1 * S1;
-```
 
-```c
     for(int i = 0; i < v_objeto.size(); i++) {
         v_objeto[i] = round(M_ViewPort * v_objeto[i]);
     }
 ```
 
-### 6. Rasterização
+### 7. Rasterização
 
 Para ocorrer a rasterização, foi utilizado o mesmo algoritmo na primeira atividade, onde são criados objetos Vertices, que contém sua coordenada x, y e o valor RGBA como atributos. Carregamos as coordenadas que estão em v_objeto, pegando de três em três vértices a formar um triângulo. No fim, temos o modelo do macaco rasterizado.
 
@@ -190,7 +195,7 @@ Uma dificuldade encontrada foi que, ao fazer a rotação, a imagem gerada ficava
 
 Ou seja, após a rasterização de um novo frame, o frame antigo ainda continuava aparecendo na tela. O modo de resolver isso foi limpando o color buffer.
 
-### 7.Comparações
+### 8. Comparações
 
  Com o objeto já rasterizado e o pipeline gráfico implementado, é hora de compararmos com uma aplicação feita em OpenGL.
  
@@ -207,6 +212,7 @@ E a imagem abaixo é a resultante da nossa atividade:
  ![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/monkey.gif)
 
 
- ### 8.Referências
-    
-  https://glm.g-truc.net/0.9.9/index.html
+ ### 9. Referências
+ 
+  - Material disponibilizado no SIGAA
+  - https://glm.g-truc.net/0.9.9/index.html
