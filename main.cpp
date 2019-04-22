@@ -8,11 +8,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "objLoader.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/norm.hpp>
+
 using namespace std;
 using namespace glm;
 //---------------------------------------------------------------------------------------------
 // Iniciação da variavel de rotação
-float y_rotacao = 0.0;
+float rotacao = 0.0;
 
 // iniciação dao vetor de vertices do objeto
 objLoader *objData;
@@ -30,7 +33,6 @@ void MyGlDraw(void)
 
 	for(int f = 0; f < objData->faceCount; f++) {
 		obj_face* obj = objData->faceList[f];
-		
 		for(int i = 0; i < 3; i++) {
 			vec_array.push_back(vec4(objData->vertexList[obj->vertex_index[i]]->e[0], objData->vertexList[obj->vertex_index[i]]->e[1], objData->vertexList[obj->vertex_index[i]]->e[2], 1.0));
 
@@ -39,7 +41,7 @@ void MyGlDraw(void)
 	}
 
     //Passa os vertices do objeto carregado para um vetor
-	vector<vec4> model = vec_array;
+	vector<vec4> v_objeto = vec_array;
     
     //---------------------------------------------------------------------------------------------
     // 1) Espaço do Objeto → Espaço do Universo 
@@ -50,14 +52,14 @@ void MyGlDraw(void)
                                 vec4(0, 0, 1, 0),
                                 vec4(0, 0, 0, 1));
 
-    //Definição de matriz Rotação, que rotaciona em ralação ao valor da variavel y_rotacao
-    mat4 M_Rotacao = mat4(  vec4(cos(y_rotacao), 0, -sin(y_rotacao), 0),
+    //Definição de matriz Rotação, que rotaciona em ralação ao valor da variavel rotacao
+    mat4 M_Rotacao = mat4(  vec4(cos(rotacao), 0, -sin(rotacao), 0),
                             vec4(0, 1, 0, 0),
-                            vec4(sin(y_rotacao), 0, cos(y_rotacao), 0),
+                            vec4(sin(rotacao), 0, cos(rotacao), 0),
                             vec4(0, 0, 0, 1));
     
     //incremento da variavel de rotação, rotacionando o objeto em +0,02 graus
-    y_rotacao += 0.02;
+    rotacao = rotacao + 0.02;
 
     //Multiplicação resultante na matriz View
     mat4 M_Model = M_Indentidade * M_Rotacao ;
@@ -67,13 +69,17 @@ void MyGlDraw(void)
     
     //Definição de parametros da camera
  	vec3 camera_pos    =   vec3(0, 0, 5);  
-    vec3 camera_target =   vec3(0, 0, 0);  
+    vec3 camera_lookat =   vec3(0, 0, 0);  
     vec3 camera_up     =   vec3(0, 1, 0);  
 
     //Definição dos eixos da camera
- 	vec3 camera_z = -normalize(camera_pos - camera_target);
-    vec3 camera_x = normalize(cross(camera_up, camera_z));
-    vec3 camera_y = normalize(cross(camera_z, camera_x));
+
+    vec3 camera_dir = camera_lookat - camera_pos;
+
+
+ 	vec3 camera_z = -(camera_dir) / l1Norm(camera_dir);
+    vec3 camera_x = cross(camera_up, camera_z) / l1Norm(cross(camera_up, camera_z));
+    vec3 camera_y = cross(camera_z, camera_x);
 
     //Definiação das matrizes que compoem a matriz View
   	mat4 B = mat4(vec4(camera_x, 0),
@@ -107,16 +113,12 @@ void MyGlDraw(void)
     //---------------------------------------------------------------------------------------------
     // 4) Espaço de Recorte → Espaço Canônico 
 
-    for(unsigned int i = 0; i < model.size(); i++)
-    {
-        model[i] = model[i] * M_MVP;
-    }
-
     //Dividindo as coordenadas dos vértices no espaço de recorte pela sua coordenada homogênea.
-    for(unsigned int i = 0; i < model.size(); i++)
+    for(int i = 0; i < v_objeto.size(); i++)
     {
-        model[i] = model[i] / model[i].w;
-    } 
+        v_objeto[i] = v_objeto[i] * M_MVP;
+        v_objeto[i] = v_objeto[i] / v_objeto[i].w;
+    }
 
     //---------------------------------------------------------------------------------------------
     // 5) Espaço Canônico → Espaço de Tela 
@@ -144,9 +146,9 @@ void MyGlDraw(void)
     
     mat4 M_ViewPort = S2 * T1 * S1;
 
-    for(unsigned int i = 0; i < model.size(); i++)
+    for(unsigned int i = 0; i < v_objeto.size(); i++)
     {
-        model[i] = round(M_ViewPort * model[i]);
+        v_objeto[i] = round(M_ViewPort * v_objeto[i]);
     }
 
     //Limpando 
@@ -155,12 +157,12 @@ void MyGlDraw(void)
     //---------------------------------------------------------------------------------------------
     //Rasterização feita na T1
 
-	for(unsigned int i = 0; i < model.size(); i+=3)
+	for(unsigned int i = 0; i < v_objeto.size(); i+=3)
     {
 
-		Pixel Vertice_1(model[i][0], model[i][1], 255, 0, 0, 255);
-		Pixel Vertice_2(model[i+1][0], model[i+1][1], 0, 255, 0, 255);
-		Pixel Vertice_3(model[i+2][0], model[i+2][1], 0, 0, 255, 255);
+		Pixel Vertice_1(v_objeto[i][0], v_objeto[i][1], 255, 0, 0, 255);
+		Pixel Vertice_2(v_objeto[i+1][0], v_objeto[i+1][1], 0, 255, 0, 255);
+		Pixel Vertice_3(v_objeto[i+2][0], v_objeto[i+2][1], 0, 0, 255, 255);
 
 		DrawTriangle(Vertice_1, Vertice_2, Vertice_3);
     }

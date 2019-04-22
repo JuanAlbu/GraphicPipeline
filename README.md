@@ -1,6 +1,6 @@
-# rasterization
+# Pipeline gráfico
 
-### Implementando um algoritmo de rasterização
+### Implementando um algoritmo de pipeline gráfico
 ##### DUPLA: SUANNY FABYNE E JUAN ALBUQUERQUE
 
 <br><br>
@@ -9,34 +9,33 @@
 
 ### Uma breve introdução
  
-  <p>A atividade é baseada na realização de um algoritmo de rasterização de pontos e linhas, sendo necessário triângulos desenhados através de construção de arestas (linhas rasterizadas). As cores atribuidas a cada vértice formam um efeito suave ao longo da linha que conecta os mesmos através da técnica de interpolação, obtendo-se um efeito degradê caso os vértices (ou pontos extremos) tenham cores distintas. A rasterização é feita através da escrita direta na memória, utilizando um framework para simular o acesso à memória de vídeo.</p>
+  <p>A atividade foi construida para ocorrer uma familiarização com a estrutura e o funcionamento do
+pipeline gráfico através da implementação de um pipeline completo, capaz de transformar vértices
+descritos no espaço do objeto em primitivas rasterizadas no espaço de tela.</p>
   
-Em resumo, há a implementação de 3 funções principais:
+Em resumo, as etapas normalmente encontradas ao longo de um pipeline gráfico são:
 
 <ol>
-  <li><b>PutPixel</b>: Rasteriza um ponto na memória de vídeo.</li>
-  <li><b>DrawLine</b>: Função que rasteriza uma linha na tela com interpolação linear das cores dos vértices.</li>
-  <li><b>DrawTriangle</b>: Desenha as arestas de um triângulo na tela</li>
+  <li>Transformação: Espaço do Objeto → Espaço do Universo</li>
+  <li>Transformação: Espaço do Universo → Espaço da Câmera</li>
+  <li>Transformação: Espaço da Câmera → Espaço Projetivo ou de Recorte</li>
+ 
+ 
+   <li>Transformação: Espaço de Recorte → Espaço “Canônico”</li>
+  <li>Transformação: Espaço Canônico → Espaço de Tela</li>
+  <li>Rasterização</b></li>
+  
 </ol>
 
 <br>
 
-### PutPixel()
+### 1. Carregamento do modelo
 
-Essa função gera um ponto no espaço cuja sua localidade é determinada pela coordenada (x,y), como também necessita de valores RGBA para determinar a cor e a opacidade deste ponto. Deve-se salientar que o ponto (0,0) fica localizado no canto superior esquerdo da tela. Podemos ver na imagem abaixo um ponto rasterizado na origem com os componentes RGBA(255,0,0,255):
-<br><br>
+Foi disponibilizado um código de carregador de malhas 3D pelo professor, onde foi utilizado para fazer o carregamento de modelo do projeto em questão. Também foi disponibilizado o <b>obj file</b> de Suzanne, a macaca do blender, onde usamos como parâmetro de comparação.
 
-``` 
-In: Pixel paramPixel(0,0,255,0,0,255);
-    PutPixel(paramPixel);
-Out:   
-```
-![alt text](https://github.com/suannyfabyne/rasterization/blob/master/prints/putpixel.png)
+![alt text](https://github.com/JuanAlbu/GraphicPipeline/edit/master/prints/monkey.png)
 
-
-Já o código abaixo mostra a função pronta, onde recebe um objeto da classe Pixel como paramêtro. Nela, contém as coordenadas x e y e os valores R, G, B e A, onde FBptr é um ponteiro que aponta para o primeiro byte do color buffer simulado, onde seu índice representa a posição na tela, e o conteúdo a componente RGBA.
-
-
+Com isso, pudemos salvar e manusear os dados contidos nesse obj file, para usar em uma posterior rasterização. Para salvar, manusear e fazer operações em matrizes de forma mais simples, foi utilizada a biblioteca <b>GLM</b>, onde também fizemos produtos vetoriais e cálculo da norma usando as funções <b> cross() </b> e <b> l1Norm() </b>.
  
  
 ```c
@@ -56,3 +55,19 @@ A função drawline consiste em rasterizar uma linha atravez de modificação di
 Nos foi disponibilizado em aula o algoritmo onde apenas aplica-se ao primeiro octante de um plano, e a maior dificuldade foi poder adaptá-lo a todos os octantes ou condições possíveis. Para isso, precisamos atender a algumas condições
 
 ![alt text](https://3.bp.blogspot.com/-Pclf4WPES_Y/V6dTCQR1OGI/AAAAAAAAACM/U_Bwy1Ov0FUGcIDSY4eqi7S-piw-5F_5wCLcB/s640/octantesreal.gif)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://glm.g-truc.net/0.9.9/index.html
