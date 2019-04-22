@@ -46,22 +46,22 @@ void MyGlDraw(void)
     //---------------------------------------------------------------------------------------------
     // 1) Espaço do Objeto → Espaço do Universo 
     
-    //Definição de matriz indentidade
+    //Definição de matriz indentidade.
     mat4 M_Indentidade = mat4(  vec4(1, 0, 0, 0),
                                 vec4(0, 1, 0, 0),
                                 vec4(0, 0, 1, 0),
                                 vec4(0, 0, 0, 1));
 
-    //Definição de matriz Rotação, que rotaciona em ralação ao valor da variavel rotacao
+    //Definição de matriz rotação, que rotaciona em relação ao valor da variável rotação.
     mat4 M_Rotacao = mat4(  vec4(cos(rotacao), 0, -sin(rotacao), 0),
                             vec4(0, 1, 0, 0),
                             vec4(sin(rotacao), 0, cos(rotacao), 0),
                             vec4(0, 0, 0, 1));
     
-    //incremento da variavel de rotação, rotacionando o objeto em +0,02 graus
+    //Incremento da variável de rotação, rotacionando o objeto incrementando um valor pequeno, escolhido como 0.02;
     rotacao = rotacao + 0.02;
 
-    //Multiplicação resultante na matriz View
+    //Multiplicação resultante na matriz View.
     mat4 M_Model = M_Indentidade * M_Rotacao ;
 
     //---------------------------------------------------------------------------------------------
@@ -73,9 +73,7 @@ void MyGlDraw(void)
     vec3 camera_up     =   vec3(0, 1, 0);  
 
     //Definição dos eixos da camera
-
     vec3 camera_dir = camera_lookat - camera_pos;
-
 
  	vec3 camera_z = -(camera_dir) / l1Norm(camera_dir);
     vec3 camera_x = cross(camera_up, camera_z) / l1Norm(cross(camera_up, camera_z));
@@ -99,7 +97,7 @@ void MyGlDraw(void)
     // 3) Espaço da Câmera → Espaço Projetivo ou de Recorte
     
     //Distancia entre a camera e o view plane
-    double d = -0.35f;
+    double d = -0.45f;
 
     //Definiação ds matriz de Projeção
     mat4 M_Projecao = mat4( vec4(1, 0, 0, 0),
@@ -109,14 +107,18 @@ void MyGlDraw(void)
 
 
     mat4 M_MVP = M_Model * M_View * M_Projecao;
+	//---------------------------------------------------------------------------------------------
+    // Multiplicação de transformação direta do espaço do objeto para o espaço de recorte
+   
+    for(int i = 0; i < v_objeto.size(); i++) {
+        v_objeto[i] = v_objeto[i] * M_MVP;
+    }
 
     //---------------------------------------------------------------------------------------------
     // 4) Espaço de Recorte → Espaço Canônico 
 
     //Dividindo as coordenadas dos vértices no espaço de recorte pela sua coordenada homogênea.
-    for(int i = 0; i < v_objeto.size(); i++)
-    {
-        v_objeto[i] = v_objeto[i] * M_MVP;
+    for(int i = 0; i < v_objeto.size(); i++) {
         v_objeto[i] = v_objeto[i] / v_objeto[i].w;
     }
 
@@ -146,7 +148,7 @@ void MyGlDraw(void)
     
     mat4 M_ViewPort = S2 * T1 * S1;
 
-    for(unsigned int i = 0; i < v_objeto.size(); i++)
+    for(int i = 0; i < v_objeto.size(); i++)
     {
         v_objeto[i] = round(M_ViewPort * v_objeto[i]);
     }
@@ -157,7 +159,7 @@ void MyGlDraw(void)
     //---------------------------------------------------------------------------------------------
     //Rasterização feita na T1
 
-	for(unsigned int i = 0; i < v_objeto.size(); i+=3)
+	for(int i = 0; i < v_objeto.size(); i+=3)
     {
 
 		Pixel Vertice_1(v_objeto[i][0], v_objeto[i][1], 255, 0, 0, 255);
