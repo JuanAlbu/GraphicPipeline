@@ -24,6 +24,7 @@ Em resumo, as etapas normalmente encontradas ao longo de um pipeline gráfico s�
   <li>Rasterização</b></li>
   
 </ol>
+![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/pipeline.png)
 
 <br>
 
@@ -105,13 +106,13 @@ Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é 
 
 ```c
     //Distancia entre a câmera e o view plane.
-    double d = -0.45f;
+    double d = 2f;
 
     //Definição da matriz de projeção.
     mat4 M_Projecao = mat4( vec4(1, 0, 0, 0),
                             vec4(0, 1, 0, 0),
-                            vec4(0, 0, 1, -1/d),
-                            vec4(0, 0, d, 0));
+                            vec4(0, 0, 1, d),
+                            vec4(0, 0, -1/d, 0));
 
 
     mat4 M_MVP = M_Model * M_View * M_Projecao;
@@ -209,4 +210,3 @@ E a imagem abaixo é a resultante da nossa atividade:
  ### 8.Referências
     
   https://glm.g-truc.net/0.9.9/index.html
-
