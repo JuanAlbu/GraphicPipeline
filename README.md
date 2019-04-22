@@ -24,7 +24,7 @@ Em resumo, as etapas normalmente encontradas ao longo de um pipeline gráfico s�
   <li>Rasterização</b></li>
   
 </ol>
-![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/pipeline.png)
+![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/pipeline.png) 
 
 <br>
 
