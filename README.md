@@ -100,6 +100,7 @@ Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é 
     mat4 M_View = transpose(B)*T;
 ```
 
+![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/view.png)
 
 
 ### 4. Transformação: Espaço da Câmera → Espaço Projetivo ou de Recorte
@@ -117,8 +118,8 @@ A terceira etapa do pipeline gráfico tem como objetivo levar o modelo para o es
                             vec4(0, 0, -1/d, 0));
 
 ```
-Para finalizar essa quarta etapa realizamos a multiplicação das três matrizes geradas nas três primeiras etapas do pipeline grafico (matriz model, matriz view, matriz de projeção) gerando assim a matriz MVP. 
-Feito isso foi multiplicada a MVP pelo objeto carregado no passo 1 para levar o modelo do espaço de objeto diretamete para o espaço de recorte.
+Para finalizar essa quarta etapa realizamos a multiplicação das três matrizes geradas nas três primeiras etapas do pipeline grafico (matriz model, matriz view, matriz de projeção), gerando assim a matriz MVP. 
+Feito isso, foi multiplicada a MVP pelo objeto carregado no passo 1 para levar o modelo do <b>espaço de objeto</b> diretamete para o <b>espaço de recorte</b>.
 
 ```c
 
@@ -134,7 +135,7 @@ Feito isso foi multiplicada a MVP pelo objeto carregado no passo 1 para levar o 
 
 ### 5. Transformação: Espaço de Recorte → Espaço “Canônico”
 
-Para proxima etapa, para fazer a transição de espaço de recorte para espaço canônico, todas as coordenadas foram divididas por w para que todas as coordenada homogênea tenham novamente seu valor igual 1.
+Para a próxima etapa, para fazer a transição de espaço de recorte para espaço canônico, todas as coordenadas foram divididas por w para que todas as coordenada homogêneas tenham novamente seu valor igual 1.
 
 ```c
     //Dividindo as coordenadas dos vértices no espaço de recorte pela sua coordenada homogênea.
@@ -147,7 +148,7 @@ Para proxima etapa, para fazer a transição de espaço de recorte para espaço 
 
 ### 6. Transformação: Espaço Canônico → Espaço de Tela
 
-Então finalmente é chegada a hora de fazer a converção das coordenadas do sistema canonico para os espaço da tela, para isso são necessarias três matrizes que combiandas resultam na matriz viewport, a primeira matriz eh uma matriz se escala negativa, onde sua função é inverter a escala no eixo Y, pois a sentido da escala nesse eixo são opostos no espaço de tela e espaço canônico, a senguna operação eh uma matriz de translação q move o modelo da origem no espaço canônico para o centro do espaço de tela e por fim uma matriz escala que tem a função de readequar o modelo nos intervalos propocionais a tela.
+Então finalmente é chegada a hora de fazer a conversão das coordenadas do sistema canônico para o espaço da tela. Para isso, são necessarias três matrizes que combinadas resultam na matriz viewport. A primeira matriz é uma matriz de escala negativa, onde sua função é inverter a escala no eixo Y, pois o sentido da escala nesse eixo são opostos no espaço de tela e espaço canônico, a segunda operação é uma matriz de translação que move o modelo da origem no espaço canônico para o centro do espaço de tela e por fim uma matriz escala que tem a função de readequar o modelo nos intervalos proporcionais a tela.
 
 ```c
     int w = 512;
