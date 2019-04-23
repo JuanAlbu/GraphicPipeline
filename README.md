@@ -104,7 +104,7 @@ Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é 
 
 ### 4. Transformação: Espaço da Câmera → Espaço Projetivo ou de Recorte
 
-A terceira etapa do pipeline gráfico tem como objetico levar os objetos para o espaço de recorte. Isso é feito através de uma multiplicão dos vertices do objeto pela matriz projeção.
+A terceira etapa do pipeline gráfico tem como objetivo levar o modelo para o espaço de recorte. Isso é feito através de uma multiplicão dos vertices do objeto pela matriz projeção.
 
 ```c
     //Distancia entre a câmera e o view plane.
@@ -116,15 +116,16 @@ A terceira etapa do pipeline gráfico tem como objetico levar os objetos para o 
                             vec4(0, 0, 1, d),
                             vec4(0, 0, -1/d, 0));
 
+```
+Para finalizar essa quarta etapa realizamos a multiplicação das três matrizes geradas nas três primeiras etapas do pipeline grafico (matriz model, matriz view, matriz de projeção) gerando assim a matriz MVP. 
+Feito isso foi multiplicada a MVP pelo objeto carregado no passo 1 para levar o modelo do espaço de objeto diretamete para o espaço de recorte.
 
+```c
+
+    // Matriz MVP resultante da multiplicação 
     mat4 M_MVP = M_Model * M_View * M_Projecao;
     
     // Multiplicação de transformação direta do espaço do objeto para o espaço de recorte
-   
-```
-
-
-```c
 
     for(int i = 0; i < v_objeto.size(); i++) {
         v_objeto[i] = v_objeto[i] * M_MVP;
