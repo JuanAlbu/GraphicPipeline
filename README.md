@@ -134,6 +134,8 @@ Feito isso foi multiplicada a MVP pelo objeto carregado no passo 1 para levar o 
 
 ### 5. Transformação: Espaço de Recorte → Espaço “Canônico”
 
+Para proxima etapa, para fazer a transição de espaço de recorte para espaço canônico, todas as coordenadas foram divididas por w para que todas as coordenada homogênea tenham novamente seu valor igual 1.
+
 ```c
     //Dividindo as coordenadas dos vértices no espaço de recorte pela sua coordenada homogênea.
     for(int i = 0; i < v_objeto.size(); i++) {
@@ -144,6 +146,9 @@ Feito isso foi multiplicada a MVP pelo objeto carregado no passo 1 para levar o 
 
 
 ### 6. Transformação: Espaço Canônico → Espaço de Tela
+
+Então finalmente é chegada a hora de fazer a converção das coordenadas do sistema canonico para os espaço da tela, para isso são necessarias três matrizes que combiandas resultam na matriz viewport, a primeira matriz eh uma matriz se escala negativa, onde sua função é inverter a escala no eixo Y, pois a sentido da escala nesse eixo são opostos no espaço de tela e espaço canônico, a senguna operação eh uma matriz de translação q move o modelo da origem no espaço canônico para o centro do espaço de tela e por fim uma matriz escala que tem a função de readequar o modelo nos intervalos propocionais a tela.
+
 ```c
     int w = 512;
     int h = 512;
