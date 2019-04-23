@@ -74,10 +74,15 @@ Após o carregamento do objeto em um vetor denominado v_objeto, começamos a tra
 
 ![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/universo_camera.png)
 
-Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é responsavel por levar o objeto do espaço do objeto para o espaço da câmera. Isso foi feito através da combinação de duas matrizes, uma matriz de rotação e outra de translação, sendo a Matriz B que serve para representar os pontos no Espaço da Câmera e uma Matriz T usada para transladar todos os vértices com objetivo de posicionar a câmera na origem. Esta translação e esta rotação são definidas a partir das informações da câmera que são: posição, direção e up.
+Em seguida da criação da matriz model, eleboramos a matriz view, sendo ela é responsavel por levar o objeto do espaço do objeto para o espaço da câmera. Isso foi feito através da combinação de duas matrizes, uma matriz de rotação e outra de translação, sendo a Matriz B que serve para representar os pontos no Espaço da Câmera e uma Matriz T usada para transladar todos os vértices com objetivo de posicionar a câmera na origem. Esta translação e esta rotação são definidas a partir das informações da câmera que são: posição, direção e up. Os parâmetros da câmera foram escolhido baseado em testes e conhecimento prévio sobre elas.
 
 
 ```c
+    //Definição de parametros da camera
+ 	  vec3 camera_pos    =   vec3(0, 0, 5);  
+    vec3 camera_lookat =   vec3(0, 0, 0);  
+    vec3 camera_up     =   vec3(0, 1, 0);  
+    
     //Definição dos eixos da câmera.
     vec3 camera_dir = camera_lookat - camera_pos;
 
@@ -218,6 +223,7 @@ E a imagem abaixo é a resultante da nossa atividade:
 
  ![alt text](https://github.com/JuanAlbu/GraphicPipeline/blob/master/prints/monkey.gif)
 
+Uma melhoria a ser discutida seria a implementação de textura.
 
  ### 9. Referências
  
